@@ -1,0 +1,42 @@
+import itertools
+import numpy as np
+
+def nwurzel(n): #Funktion erhält Integer n und gibt die n-te Einheitswurzel samt Potenzen in einer Liste zurück
+    nwurzel=[]
+    for i in range(1,n+1):
+        nwurzel.append(E(n)^i)
+    return nwurzel
+
+def cartesian(liste,l): #Funktion erhält Liste und Integer l und gibt l-tes kartesisches Produkt (als Liste) dieser Liste zurück
+    return [p for p in itertools.product(liste, repeat = l)]
+
+def eta(c): #Funktion erhält Zahl c und gibt die 2x2-Matrix der eta-Funktion für diesen Wert zurück
+    return np.array([[c,-1],[1,0]])
+
+def compare(matrix): #Funktion vergleicht eine 2x2-Matrix mit der 2x2 -id-Matrix und gibt True oder False zurück 
+    nid = np.array([[-1,0],[0,-1]])
+    return (nid == matrix).all()
+
+def anzahlqz(n,l): #Funktion erhält n der n-ten EWurzel sowie l der Länge der QZ und gibt Anzahl der 
+                   #QZ der Länge l mit Einträgen dieser EWurzel zurück
+    permutation = cartesian(nwurzel(n), l)
+    anzahl = 0
+    for versuch in permutation:
+        Multmat = np.array([[1,0],[0,1]])
+        for eintrag in versuch:
+            Multmat = np.matmul(Multmat, eta(eintrag))
+        if compare(Multmat):
+            anzahl = anzahl + 1 
+    return anzahl
+
+def qz(n,l): #Funktion gibt QZ der Länge l mit Einträgen von Potenzen der n-ten Einheitswurzel zurück sowie der Anzahl an QZ
+    permutation = cartesian(nwurzel(n), l)
+    qz = []
+    for versuch in permutation:
+        Multmat = np.array([[1,0],[0,1]])
+        for eintrag in versuch:
+            Multmat = np.matmul(Multmat, eta(eintrag))
+        if compare(Multmat):
+            qz.append(versuch)
+    qz.insert(0, len(qz))
+    return qz
